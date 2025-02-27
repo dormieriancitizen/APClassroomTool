@@ -16,7 +16,7 @@ with open(Path("response.json"),"rb") as response:
     for item in items:
         questions = item["questions"]
         for question in questions:
-            os.system('clear')
+            # os.system('clear')
             i += 1
 
             if question["validation"]["scoring_type"] != "exactMatch":
