@@ -38,17 +38,19 @@ with open(Path("response.json"),"rb") as response:
             questionSoup = BeautifulSoup(questionHTML,features="html.parser")
             questionText = questionSoup.select(".stem_paragraph")[0].get_text()
 
-            rationaleList = question["metadata"]["custom_distractor_rationale_response_level"]
-            rationaleHTML = rationaleList[answerNumber-1]
-            rationaleSoup = BeautifulSoup(rationaleHTML,features="html.parser")
-            rationale = rationaleSoup.text
+            rationale = "None"
+            if "custom_distractor_rationale_response_level" in question["metadata"]:
+                rationaleList = question["metadata"]["custom_distractor_rationale_response_level"]
+                rationaleHTML = rationaleList[answerNumber-1]
+                rationaleSoup = BeautifulSoup(rationaleHTML,features="html.parser")
+                rationale = rationaleSoup.text
 
             print(f"{Style.RESET_ALL}{Style.BRIGHT+Fore.RED}{i}. {Style.RESET_ALL}{questionText}")
 
             prettyInfo = [
                 Fore.BLUE+Style.BRIGHT+answerABC,
                 Fore.GREEN+answer,
-                Style.DIM+rationale
+                Style.DIM+rationale 
             ]
 
             sep = f"{Style.RESET_ALL+Style.DIM} - {Style.RESET_ALL}"
