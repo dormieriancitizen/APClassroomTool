@@ -6,6 +6,10 @@ import (
 	"log"
 	"os"
 	"slices"
+	"strconv"
+	"strings"
+
+	color "github.com/fatih/color"
 )
 
 type Question struct {
@@ -74,14 +78,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	for _, question := range root.Data.ApiActivity.QuestionsApiActivity.Questions {
-		fmt.Println("Question: " + question.Stimulus)
+	for i, question := range root.Data.ApiActivity.QuestionsApiActivity.Questions {
+		fmt.Println("Question " + strconv.Itoa((i + 1)) + ": " + color.BlueString(strings.TrimSpace(question.Stimulus)))
 
 		answered := false
 		for i, option := range question.Options {
 			if slices.Contains(question.Validation.ValidResponse.Value, option.Value) {
-				fmt.Println("    AnswerID: " + string("ABCD"[i]))
-				fmt.Println("    Answer: " + option.Label)
+				fmt.Println("    AnswerID: " + color.GreenString(string("ABCD"[i])))
+				fmt.Println("    Label: " + strings.TrimSpace(option.Label))
 				answered = true
 			}
 		}
@@ -89,7 +93,6 @@ func main() {
 		if !answered {
 			fmt.Println("Unknown answer: ", question.Validation.ValidResponse.Value)
 		}
-		fmt.Println()
 		fmt.Scanln()
 	}
 }
