@@ -1,4 +1,0 @@
-beautifulsoup4==4.13.3
-colorama==0.4.6
-soupsieve==2.6
-typing_extensions==4.12.2
