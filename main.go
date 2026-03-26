@@ -106,7 +106,7 @@ func main() {
 		answered := false
 		for i, option := range question.Options {
 			if slices.Contains(question.Validation.ValidResponse.Value, option.Value) {
-				fmt.Println("    AnswerID: " + color.GreenString(string("ABCD"[i])))
+				fmt.Println("    AnswerID: " + color.GreenString(string("ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i])))
 				fmt.Println("    Label: " + extractTextStr(strings.TrimSpace(option.Label)))
 				answered = true
 			}
