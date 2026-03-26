@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"golang.org/x/net/html"
 	"log"
 	"os"
 	"slices"
@@ -65,6 +66,27 @@ type QuestionsApiActivity struct {
 	Questions []Question `json:"questions"`
 }
 
+func extractText(n *html.Node) string {
+	if n.Type == html.TextNode {
+		return n.Data
+	}
+
+	var text strings.Builder
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		text.WriteString(extractText(c))
+	}
+	return text.String()
+}
+
+func extractTextStr(str string) string {
+	doc, err := html.Parse(strings.NewReader(str))
+	if err != nil {
+		panic(err)
+	}
+
+	return extractText(doc)
+}
+
 func main() {
 	jsonBytes, err := os.ReadFile("response.json")
 	if err != nil {
@@ -79,13 +101,13 @@ func main() {
 	}
 
 	for i, question := range root.Data.ApiActivity.QuestionsApiActivity.Questions {
-		fmt.Println("Question " + strconv.Itoa((i + 1)) + ": " + color.BlueString(strings.TrimSpace(question.Stimulus)))
+		fmt.Println("Question " + strconv.Itoa((i + 1)) + ": " + extractTextStr(color.BlueString(strings.TrimSpace(question.Stimulus))))
 
 		answered := false
 		for i, option := range question.Options {
 			if slices.Contains(question.Validation.ValidResponse.Value, option.Value) {
 				fmt.Println("    AnswerID: " + color.GreenString(string("ABCD"[i])))
-				fmt.Println("    Label: " + strings.TrimSpace(option.Label))
+				fmt.Println("    Label: " + extractTextStr(strings.TrimSpace(option.Label)))
 				answered = true
 			}
 		}
